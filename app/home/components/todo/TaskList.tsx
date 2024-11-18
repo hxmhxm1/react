@@ -1,6 +1,7 @@
 'use client'
 import { useState } from 'react';
 import { TTask, useTasks, useTasksDispatch } from './TasksContext';
+import { Button } from '@mui/base/Button';
 
 export default function TaskList() {
   const tasks = useTasks();
@@ -33,23 +34,25 @@ function Task({task} : { task: TTask }) {
               }
             });
           }} />
-        <button onClick={() => setIsEditing(false)}>
+        <Button onClick={() => setIsEditing(false)}>
           Save
-        </button>
+        </Button>
       </>
     );
   } else {
     taskContent = (
       <>
-        {task.text}
-        <button onClick={() => setIsEditing(true)}>
+        <div className='mx-[1rem] leading-8 my-[0.2rem]'>
+          {task.text}
+        </div>
+        <Button onClick={() => setIsEditing(true)} className="mr-[1rem]" >
           Edit
-        </button>
+        </Button>
       </>
     );
   }
   return (
-    <label>
+    <label className='flex'>
       <input
         type="checkbox"
         checked={task.done}
@@ -64,14 +67,15 @@ function Task({task} : { task: TTask }) {
         }}
       />
       {taskContent}
-      <button onClick={() => {
+      <Button onClick={() => {
         dispatch?.({
           type: 'deleted',
           id: task.id
         });
-      }}>
+       }}
+      >
         Delete
-      </button>
+      </Button>
     </label>
   );
 }

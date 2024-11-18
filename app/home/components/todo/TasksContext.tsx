@@ -1,5 +1,7 @@
 'use client'
-import { createContext, useContext, useReducer } from 'react';
+
+import React, { createContext, ReactElement, useContext, useReducer } from "react"
+
 export type TTask = {
   id: number,
   text: string,
@@ -12,33 +14,38 @@ export enum EAction{
   'DELETE' = 'deleted'
 }
 
-const TasksContext = createContext<TTask[] | null>(null);
-
-const TasksDispatchContext = createContext<Function|null>(null);
-
-export function TasksProvider(props: { children: any }) {
+const TasksContext = createContext<TTask[] | null>(null)
+const TaskDispatchContext = createContext<Function | null>(null)
+const Provider = (props: {children: any}) => {
   const { children } = props
-  const [tasks, dispatch] = useReducer(
-    tasksReducer,
-    initialTasks
-  );
-
+  const [tasks, disptach] = useReducer(tasksReducer, initialTask)
   return (
     <TasksContext.Provider value={tasks}>
-      <TasksDispatchContext.Provider value={dispatch}>
-        {children}
-      </TasksDispatchContext.Provider>
+      <TaskDispatchContext.Provider value={disptach}>
+      {children}
+      </TaskDispatchContext.Provider>
     </TasksContext.Provider>
-  );
+  )
 }
 
-export function useTasks() {
-  return useContext(TasksContext) as TTask[];
+export const useTasks = () => {
+  return useContext(TasksContext) as TTask[]
+}
+export const useTasksDispatch = () => {
+  return useContext(TaskDispatchContext)
 }
 
-export function useTasksDispatch() {
-  return useContext(TasksDispatchContext);
-}
+const initialTask = [
+  {
+    id: 0, text: '待完成一', done: false
+  },
+  {
+    id: 1, text: '待完成二', done: false
+  },
+  {
+    id: 2, text: '待完成三', done: false
+  },
+]
 
 function tasksReducer(tasks: any[], action: { type: string; id: any; text: any; task: { id: any; }; }) {
   switch (action.type) {
@@ -67,8 +74,4 @@ function tasksReducer(tasks: any[], action: { type: string; id: any; text: any; 
   }
 }
 
-const initialTasks = [
-  { id: 0, text: 'Philosopher’s Path', done: true },
-  { id: 1, text: 'Visit the temple', done: false },
-  { id: 2, text: 'Drink matcha', done: false }
-];
+export default Provider

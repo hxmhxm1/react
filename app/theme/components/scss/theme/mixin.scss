@@ -1,0 +1,25 @@
+// @mixin theme{
+//   @content;
+//   body[data-theme='yellow']{
+//     @import './yellow.scss';
+//     @content
+//   }
+// }
+@import "./yellow.scss";
+@mixin theme {
+  @content;
+  //body[data-theme="dark"] {
+  //  @import "../variable/dark/index.scss";
+  //  @content;
+  //}
+
+  body[scss-theme='yellow'] {
+    $y-color: yellow;
+    // @import "./yellow.scss";
+    @content;
+  }
+  body[scss-theme='red']{
+    $y-color: red;
+    @content;
+  }
+}

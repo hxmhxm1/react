@@ -1,0 +1,74 @@
+$text-normal: #333;
+$text-medium: #666;
+$text-light: #999;
+$text-green: #55c000;
+$text-red: #ff4e27;
+$color-success: #79dc2b;
+$color-danger: #ff2e00;
+
+// html[data-theme="red"]{
+//   $color-theme: red;
+// }
+
+// html[data-theme="yellow"]{
+//   $color-theme: yellow;
+// }
+$color-theme: pink;
+@mixin theme {
+  @content;
+  html{
+    $color-theme: pink;
+  }
+  html[data-theme="red"]{
+    $color-theme: red;
+  }
+  html[data-theme="yellow"]{
+    $color-theme: yellow;
+  }
+};
+
+@mixin bgColor($color){
+  background: $color;
+}
+
+.text-red {
+  color: $text-red;
+}
+.text-green {
+  color: $text-green;
+}
+
+// antd-mobile 变量覆盖
+:root:root {
+  // --adm-color-primary: $color-theme;
+  --adm-color-success: $color-success;
+  --adm-color-danger: $color-danger;
+}
+
+.text-sj-normal {
+  color: $text-normal;
+}
+
+.text-sj-medium {
+  color: $text-medium;
+}
+
+.text-sj-light {
+  color: $text-light;
+}
+
+.text-sj-green {
+  color: $text-green;
+}
+
+.text-sj-red {
+  color: $text-red;
+}
+
+// .text-sj-primary {
+//   color: $color-theme;
+// }
+
+// .bg-color-sj-theme {
+//   background: $color-theme;
+// }

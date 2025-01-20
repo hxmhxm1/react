@@ -1,0 +1,10 @@
+html{
+  --color-theme: pink;
+}
+html[data-theme="red"]{
+  --color-theme: red;
+}
+
+html[data-theme="yellow"]{
+  --color-theme: yellow;
+}

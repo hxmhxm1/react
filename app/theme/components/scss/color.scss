@@ -1,0 +1,70 @@
+$theme:(
+  red: (
+    background-color: red,
+    linear-gradient: red,
+    danger-color: #ff2e00,
+    text-normal: #333,
+  ),
+  yellow:(
+    background-color: yellow,
+    linear-gradient: yellow,
+    danger-color: #ff2e00,
+    text-normal: #333
+  )
+);
+
+@mixin theme-foreach{
+  @each $key, $value in $theme{
+    $theme-map: $value !global;
+    [scss-theme="#{$key}"] & {
+      @content
+    }
+  }
+};
+
+@function theme-value($key){
+  @return map-get($theme-map, $key)
+};
+
+// @mixin primary-bg {
+//   background: $scss-theme;
+//   [scss-theme='red'] & {
+//     background: red;
+//   }
+//   [scss-theme="yellow"] & {
+//     background: yellow;
+//   }
+// }
+@mixin primary-bg {
+  @include theme-foreach{
+    background: theme-value('background-color')
+  }
+}
+
+@mixin danger-bg{
+  @include theme-foreach(){
+    color: theme-value('danger-color');
+  }
+}
+
+// @mixin slider-bg{
+//   background: linear-gradient(to right, $scss-theme, $scss-theme) 0 / var(--sx) 100% no-repeat,#cdcdcd;
+//   [scss-theme='red'] & {
+//     background: linear-gradient(to right, red, red) 0 / var(--sx) 100% no-repeat,#cdcdcd;
+//   }
+//   [scss-theme="yellow"] & {
+//     background: linear-gradient(to right, yellow, yellow) 0 / var(--sx) 100% no-repeat,#cdcdcd;
+//   }
+// }
+@mixin slider-bg{
+  @include theme-foreach{
+    $tempColor: theme-value('linear-gradient');
+    background: linear-gradient(to right, $tempColor, $tempColor) 0 / var(--sx) 100% no-repeat,#cdcdcd;
+  }
+}
+
+@mixin text-normal{
+  @include theme-foreach(){
+    color: theme-value('text-normal')
+  }
+}

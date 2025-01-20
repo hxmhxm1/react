@@ -1,6 +1,7 @@
 'use client'
 import { useRouter } from 'next/navigation'
 import './globals.css'
+import { useEffect } from 'react';
 
 export default function Home() {
   const router = useRouter()
@@ -11,8 +12,8 @@ export default function Home() {
       desc: '等同于vue中的provide、inject'
     },
     {
-      title: '待定', 
-      url: '/',
+      title: '组件主题切换', 
+      url: '/theme',
       desc: ''
     }
   ]
@@ -37,6 +38,7 @@ export default function Home() {
     }
     return color;
   }
+
   return (
     <div className="content" suppressHydrationWarning>
       {

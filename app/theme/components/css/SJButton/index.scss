@@ -1,0 +1,74 @@
+@import '../color.css';
+.css-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  user-select:none;
+  span {
+    min-width: 54px;
+    text-align: center;
+    color: var(--css-text-normal);
+  }
+  // size
+  &.css-button-large {
+    margin: 0 auto;
+    width: 200px;
+    height: 60px;
+    border-radius: 30px;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 22px;
+  }
+  &.css-button-normal {
+    width: 142px;
+    height: 46px;
+    border-radius: 30px;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 2px;
+  }
+  &.css-button-small {
+    width: 104px;
+    height: 36px;
+    border-radius: 18px;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 12px;
+    line-height: 22px;
+  }
+  // type
+  &.css-button-default {
+    background: #ffffff;
+    box-shadow: 0px 16px 40px -16px rgba(196, 196, 196, 0.3);
+    span {
+      color: var(--css-text-normal);
+    }
+  }
+  &.css-button-danger {
+    background: #ffffff;
+    box-shadow: 0px 16px 40px -16px rgba(196, 196, 196, 0.3);
+    span {
+      color: var(--css-danger);
+    }
+    &:hover {
+      background: #efefef;
+    }
+  }
+  
+  &.css-button-primary {
+    background: var(--css-theme);
+    box-shadow: 0px 16px 40px -16px rgba(255, 214, 0, 0.3);
+  }
+  &.css-button-disabled {
+    background: #ded9d8 !important;
+    box-shadow: 0px 16px 40px -16px rgba(183, 183, 183, 0.3);
+    opacity: 0.3;
+  }
+  &.css-button-active {
+      background: var(--css-theme);
+      box-shadow: 0px 16px 40px -16px rgba(255, 184, 0, 0.3);
+  }
+}

@@ -1,0 +1,7 @@
+@import "./theme/dark.css";
+@import "./theme/light.css";
+html{
+  --css-theme: green;
+  --css-text-normal: pink;
+  --css-danger: #ff2e00;
+}

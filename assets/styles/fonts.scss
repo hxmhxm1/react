@@ -1,0 +1,81 @@
+.font {
+  font-style: normal;
+  font-weight: 400;
+}
+
+.fs26 {
+  @extend .font;
+  font-size: 26px;
+  line-height: 22px;
+}
+.fs26b {
+  @extend .fs26;
+  font-weight: 500;
+}
+.fs20 {
+  @extend .font;
+  font-size: 20px;
+  line-height: 28px;
+}
+.fs20b {
+  @extend .fs20;
+  font-weight: 500;
+}
+.fs18 {
+  @extend .font;
+  font-size: 18px;
+  line-height: 32px;
+  font-weight: 500;
+}
+.fs16 {
+  @extend .font;
+  font-size: 16px;
+  line-height: 22px;
+}
+.fs16b {
+  @extend .fs16;
+  font-weight: 500;
+}
+.fs14 {
+  @extend .font;
+  font-size: 14px;
+  line-height: 20px;
+}
+.fs14b {
+  @extend .fs14;
+  font-weight: 500;
+}
+.fs12 {
+  @extend .font;
+  font-size: 12px;
+  line-height: 17px;
+}
+.fs12b {
+  @extend.fs12;
+  font-weight: 500;
+}
+.fs10 {
+  @extend .font;
+  font-size: 10px;
+  line-height: 14px;
+}
+.fs10b {
+  @extend .fs10;
+  font-weight: 500;
+}
+
+.h1 {
+  @extend .fs18;
+}
+.h2 {
+  @extend .fs16b;
+}
+.h3 {
+  @extend .fs14b;
+}
+.h4 {
+  @extend .fs12b;
+}
+.h5 {
+  @extend.fs10;
+}

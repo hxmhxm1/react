@@ -1,0 +1,19 @@
+.sj-radio {
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+  cursor: pointer;
+
+  &-title {
+    font-size: 14px;
+    line-height: 20px;
+    margin-left: 8px;
+    font-style: normal;
+    font-weight: 500;
+  }
+
+  &-icon {
+    width: 17px;
+    height: 17px;
+  }
+}

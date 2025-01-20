@@ -1,0 +1,78 @@
+@use '../color.scss';
+@import '../theme/mixin.scss';
+.scss-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  user-select:none;
+  span {
+    min-width: 54px;
+    text-align: center;
+    // color: color.$scss-text-normal;
+    @include color.text-normal()
+  }
+  // size
+  &.scss-button-large {
+    margin: 0 auto;
+    width: 200px;
+    height: 60px;
+    border-radius: 30px;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 22px;
+  }
+  &.scss-button-normal {
+    width: 142px;
+    height: 46px;
+    border-radius: 30px;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 2px;
+  }
+  &.scss-button-small {
+    width: 104px;
+    height: 36px;
+    border-radius: 18px;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 12px;
+    line-height: 22px;
+  }
+  // type
+  &.scss-button-default {
+    background: #ffffff;
+    box-shadow: 0px 16px 40px -16px rgba(196, 196, 196, 0.3);
+    span {
+      // color: color.$scss-text-normal;
+      @include color.text-normal()
+    }
+  }
+  &.scss-button-danger {
+    background: #ffffff;
+    box-shadow: 0px 16px 40px -16px rgba(196, 196, 196, 0.3);
+    span {
+      @include color.danger-bg();
+    }
+    &:hover {
+      background: #efefef;
+    }
+  }
+  
+  &.scss-button-primary {
+    box-shadow: 0px 16px 40px -16px rgba(255, 214, 0, 0.3);
+    @include color.primary-bg()
+    // background: $y-color;
+  }
+  &.scss-button-disabled {
+    background: #ded9d8 !important;
+    box-shadow: 0px 16px 40px -16px rgba(183, 183, 183, 0.3);
+    opacity: 0.3;
+  }
+  &.scss-button-active {
+      @include color.primary-bg();
+      box-shadow: 0px 16px 40px -16px rgba(255, 184, 0, 0.3);
+  }
+}

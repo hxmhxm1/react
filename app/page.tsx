@@ -15,6 +15,11 @@ export default function Home() {
       title: '组件主题切换', 
       url: '/theme',
       desc: ''
+    },
+    {
+      title: 'React 19 新特性',
+      url: '/react19',
+      desc: '了解 React 19 中的新特性和改进'
     }
   ]
   const goDetail = (params: {title: string, url: string, desc: string}) => {

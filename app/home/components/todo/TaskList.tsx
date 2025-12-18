@@ -1,7 +1,6 @@
 'use client'
 import { useState } from 'react';
 import { TTask, useTasks, useTasksDispatch } from './TasksContext';
-import { Button } from '@mui/base/Button';
 
 export default function TaskList() {
   const tasks = useTasks();
@@ -34,9 +33,9 @@ function Task({task} : { task: TTask }) {
               }
             });
           }} />
-        <Button onClick={() => setIsEditing(false)}>
+        <button onClick={() => setIsEditing(false)}>
           Save
-        </Button>
+        </button>
       </>
     );
   } else {

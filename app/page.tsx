@@ -1,7 +1,6 @@
 'use client'
 import { useRouter } from 'next/navigation'
 import './globals.css'
-import { useEffect } from 'react';
 
 export default function Home() {
   const router = useRouter()
@@ -45,19 +44,19 @@ export default function Home() {
   }
 
   return (
-    <div className="content" suppressHydrationWarning>
+    <div className="min-h-[calc(100vh-4rem)] flex flex-wrap items-center justify-center gap-4 p-6" suppressHydrationWarning>
       {
         data.map((item, index) => {
           return (
           <div 
             key={index} 
-            style={{'background': randomColor()}} 
-            className="card" 
+            style={{ background: randomColor() }} 
+            className="w-[220px] min-h-[200px] m-3 flex flex-col justify-center items-center cursor-pointer rounded-lg border border-black/10 shadow-sm transition-transform duration-200 ease-in-out hover:-translate-y-0.5 hover:shadow-lg hover:border-black/20"
             onClick={() => goDetail(item)} 
             suppressHydrationWarning
           >
-            <div className="title">{item.title}</div>
-            <div className="grey">{item.desc}</div>
+            <div className="text-xl font-bold text-center">{item.title}</div>
+            <div className="mt-2 text-base font-medium text-gray-500 text-center w-full">{item.desc}</div>
           </div>
         )})
       }

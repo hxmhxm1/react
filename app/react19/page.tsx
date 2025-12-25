@@ -1,17 +1,20 @@
 'use client';
 import React, { useState } from 'react';
-import { UseActionStateDemo } from './useActionState/UseActionStateDemo';
-import { UseOptimisticDemo } from './useOptimistic/UseOptimisticDemo';
-import { UseDeferredValueDemo } from './useDeferredValue/UseDeferredValueDemo';
-import { UseTransitionDemo } from './useTransition/UseTransitionDemo';
+import { GetAllNotesDemo } from './getAllNotes/GetAllNotesDemo';
+// import { UseActionStateDemo } from './useActionState/UseActionStateDemo';
+// import { UseOptimisticDemo } from './useOptimistic/UseOptimisticDemo';
+// import { UseDeferredValueDemo } from './useDeferredValue/UseDeferredValueDemo';
+// import { UseTransitionDemo } from './useTransition/UseTransitionDemo';
+// import { GetAllNotesDemo } from './getAllNotes/GetAllNotesDemo';
 
-type TabType = 'useActionState' | 'useOptimistic' | 'useDeferredValue' | 'useTransition';
+type TabType = 'useActionState' | 'useOptimistic' | 'useDeferredValue' | 'useTransition' | 'getAllNotes';
 
 const tabs: { id: TabType; label: string; icon: string }[] = [
   { id: 'useActionState', label: 'useActionState', icon: '📝' },
   { id: 'useOptimistic', label: 'useOptimistic', icon: '⚡' },
   { id: 'useDeferredValue', label: 'useDeferredValue', icon: '🔍' },
   { id: 'useTransition', label: 'useTransition', icon: '🚀' },
+  { id: 'getAllNotes', label: 'getAllNotes', icon: '📋' },
 ];
 
 export default function Page() {
@@ -52,13 +55,14 @@ export default function Page() {
       </div>
 
       {/* 内容区域 */}
-      <div style={{ background: 'white', minHeight: 'calc(100vh - 200px)' }}>
+      {/* <div style={{ background: 'white', minHeight: 'calc(100vh - 200px)' }}>
         {activeTab === 'useActionState' && <UseActionStateDemo />}
         {activeTab === 'useOptimistic' && <UseOptimisticDemo />}
         {activeTab === 'useDeferredValue' && <UseDeferredValueDemo />}
         {activeTab === 'useTransition' && <UseTransitionDemo />}
-      </div>
-
+        {activeTab === 'getAllNotes' && <GetAllNotesDemo />}
+      </div> */}
+  <GetAllNotesDemo />
       {/* 页脚 */}
       <div style={{ background: '#f5f5f5', padding: '20px', textAlign: 'center', color: '#666', fontSize: 12 }}>
         <p>

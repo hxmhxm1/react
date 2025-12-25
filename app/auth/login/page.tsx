@@ -3,12 +3,9 @@
 import Link from 'next/link'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { setCookie } from 'cookies-next'
+import { signIn } from 'next-auth/react'
 
-const mockUsers = [
-  { username: 'testuser', password: 'password123', name: '测试用户' },
-  { username: 'admin', password: 'admin123', name: '管理员' },
-]
+
 
 export default function LoginPage() {
   const [username, setUsername] = useState('')
@@ -20,16 +17,16 @@ export default function LoginPage() {
 
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
-    const user = mockUsers.find(u => u.username === username && u.password === password)
-    if (user) {
-      setMessage({ type: 'success', text: `欢迎回来，${user.name}` })
-      setCookie('isLoggedIn', '1', { maxAge: remember ? 7 * 24 * 60 * 60 : 2 * 60 * 60 })
-      setCookie('userName', user.name, { maxAge: remember ? 7 * 24 * 60 * 60 : 2 * 60 * 60 })
-      router.push('/')
-      router.refresh()
-    } else {
-      setMessage({ type: 'error', text: '用户名或密码错误' })
-    }
+    setMessage(null)
+    signIn('credentials', { username, password, redirect: false })
+      .then(res => {
+        if (res?.error) {
+          setMessage({ type: 'error', text: '用户名或密码错误' })
+        } else {
+          router.push('/')
+          router.refresh()
+        }
+      })
   }
 
   return (

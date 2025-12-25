@@ -1,17 +1,18 @@
 import Navbar from "@/fragment/Navbar";
 import "./globals.css";
-import { cookies } from 'next/headers'
+import { getServerSession } from 'next-auth'
+import { authOptions } from '@/lib/next-auth'
 
 export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const cookieStore = await cookies()
+  const session = await getServerSession(authOptions)
   return (
     <html lang="en">
       <body>
-        <Navbar isLoggedIn={cookieStore.get('isLoggedIn')?.value === '1'}></Navbar>
+        <Navbar isLoggedIn={!!session}></Navbar>
         <main className="pt-16">
           {children}
         </main>

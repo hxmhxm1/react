@@ -2,16 +2,13 @@
 
 // components/Navbar.tsx
 import Link from 'next/link';
-import { useRouter } from 'next/navigation'
-import { deleteCookie } from 'cookies-next'
+
+import { signOut } from 'next-auth/react'
 
 export default function Navbar({ isLoggedIn }: { isLoggedIn: boolean }) {
-  const router = useRouter()
+
   function handleLogout() {
-    deleteCookie('isLoggedIn', { path: '/' })
-    deleteCookie('userName', { path: '/' })
-    router.replace('/auth/login')
-    router.refresh()
+    signOut({ callbackUrl: '/auth/login' })
   }
   return (
     <nav className="fixed top-0 w-full z-50 border-b border-gray-200 bg-red backdrop-blur-md shadow-sm">

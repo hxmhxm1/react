@@ -1,25 +1,22 @@
 import { prisma } from '@/lib/prisma-client'
 import { NextResponse } from 'next/server'
-import type { Note } from '@prisma/client'
 
-export async function GET() {
+// 获取所有博客
+// 通过id获取某个
+export async function GET(request: Request) {
   try {
+    const { searchParams } = new URL(request.url)
+    const noteId = searchParams.get('id') // 获取查询参数 ?id=xxx
+    if(noteId){
+      const content = await prisma.note.findFirst({where: { id: noteId}})
+      return NextResponse.json(content)
+    }
+
     const notes = await prisma.note.findMany()
-    
-    // 构造返回数据
-    const res = notes.map((note: Note) => ({
-      id: note.id,
-      title: note.title,
-      content: note.content,
-      updateTime: note.updatedAt
-    }))
-    
-    return NextResponse.json(res)
+    return NextResponse.json(notes)
+
   } catch (error) {
     console.error('获取笔记失败:', error)
-    return NextResponse.json(
-      { error: '获取笔记失败' },
-      { status: 500 }
-    )
+    return NextResponse.json({ error: '获取笔记失败' }, { status: 500 })
   }
 }

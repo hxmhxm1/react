@@ -2,6 +2,7 @@ import Navbar from "@/fragment/Navbar";
 import "./globals.css";
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/next-auth'
+import { Providers } from './providers'
 
 export default async function RootLayout({
   children,
@@ -12,10 +13,12 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body>
-        <Navbar isLoggedIn={!!session}></Navbar>
-        <main className="pt-16">
-          {children}
-        </main>
+        <Providers session={session}>
+          <Navbar isLoggedIn={!!session}></Navbar>
+          <main className="pt-16">
+            {children}
+          </main>
+        </Providers>
       </body>
     </html>
   );

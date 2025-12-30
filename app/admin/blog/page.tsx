@@ -9,7 +9,7 @@ export default async function BlogPage() {
   const cookie = h.get('cookie') ?? ''
   let notes: TNote[] = []
   try {
-    const res = await fetch(`${BASE_URL}/api/notes`, { cache: 'no-store', headers: { cookie } })
+    const res = await fetch(`${BASE_URL}/api/notes/my-notes`, { cache: 'no-store', headers: { cookie } })
     notes = res.ok ? await res.json() : []
   } catch {
     notes = []

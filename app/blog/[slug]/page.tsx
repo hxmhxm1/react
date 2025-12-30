@@ -1,16 +1,17 @@
 import Link from 'next/link'
-
-import { POSTS } from '../_data'
+import { BASE_URL } from '@/const'
 
 export async function generateMetadata({ params }: { params: { slug: string } }) {
   const urlParams = await params
-  const note = POSTS.find(p => p.id.toLowerCase() === urlParams.slug?.toLowerCase())
-  return { title: note ? note.title : '未找到博客' }
+  const res = await fetch(`${BASE_URL}/api/notes?id=${urlParams.slug?.toLowerCase()}`, { cache: 'no-store' })
+  const note = res.ok ? await res.json() : {title: null}
+  return { title: note?.title?? '未找到博客' }
 }
 
 export default async function Page({ params }: { params: { slug: string } }) {
   const urlParams = await params
-  const note = POSTS.find(p => p.id.toLowerCase() === urlParams.slug?.toLowerCase())
+  const res = await fetch(`${BASE_URL}/api/notes?id=${urlParams.slug?.toLowerCase()}`)
+  const note = res.ok ? await res.json() : []
   if (!note) {
     return (
       <div className="container mx-auto px-4 py-8">

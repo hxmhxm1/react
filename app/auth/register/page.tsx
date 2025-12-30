@@ -1,59 +1,42 @@
 'use client'
 
 import Link from 'next/link'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { signIn } from 'next-auth/react'
-import CryptoJS from 'crypto-js'
 
-const SECRET_KEY = 'DEFUALTSECRETKEY'
-
-const enCrypt = (word: string): string => {
-   return CryptoJS.AES.encrypt(word, SECRET_KEY).toString()
-}
-
-const deCrypt = (word: string): string => {
-  return CryptoJS.AES.decrypt(word, SECRET_KEY).toString(CryptoJS.enc.Utf8)
-}
-
-export default function LoginPage() {
+export default function RegisterPage() {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-  const [remember, setRemember] = useState(true)
+  const [confirmPassword, setConfirmPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null)
   const [loading, setLoading] = useState(false)
   const router = useRouter()
 
-  useEffect(() => {
-    const u = typeof window !== 'undefined' ? localStorage.getItem('remember_username') : null
-    const p = typeof window !== 'undefined' ? localStorage.getItem('remember_password') : null
-    if (u) setUsername(u)
-    if (p) setPassword(deCrypt(p))
-    if (u || p) setRemember(true)
-  }, [])
-
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
-    if (!username || !password) {
-      setMessage({ type: 'error', text: '请输入用户名和密码' })
+    if (!username || !password || !confirmPassword) {
+      setMessage({ type: 'error', text: '请填写完整信息' })
       return
     }
-    setMessage(null)
+    if (password !== confirmPassword) {
+      setMessage({ type: 'error', text: '两次输入的密码不一致' })
+      return
+    }
     setLoading(true)
     try {
-      const res = await signIn('credentials', { username, password, redirect: false, callbackUrl: '/' })
-      if (!res || res.error) {
-        setMessage({ type: 'error', text: '用户名或密码错误' })
+      const res = await fetch('/api/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password }),
+      })
+      const data = await res.json()
+      if (!res.ok) {
+        setMessage({ type: 'error', text: data.error || '注册失败' })
         return
       }
-      setMessage({ type: 'success', text: '登录成功' })
-      if (remember) {
-        localStorage.setItem('remember_username', username)
-        localStorage.setItem('remember_password', enCrypt(password))
-      }
-      router.push(res.url ?? '/')
-      router.refresh()
+      setMessage({ type: 'success', text: '注册成功，正在前往登录...' })
+      router.push('/auth/login')
     } catch {
       setMessage({ type: 'error', text: '网络错误，请稍后重试' })
     } finally {
@@ -65,8 +48,8 @@ export default function LoginPage() {
     <div className="min-h-screen flex items-center justify-center bg-gray-50">
       <div className="w-full max-w-md rounded-xl border border-black/10 bg-white shadow-sm p-8">
         <div className="mb-6">
-          <h1 className="text-2xl font-bold">登录</h1>
-          <p className="mt-1 text-sm text-gray-500">使用您的账号登录系统</p>
+          <h1 className="text-2xl font-bold">注册</h1>
+          <p className="mt-1 text-sm text-gray-500">创建一个新账号</p>
         </div>
 
         {message && (
@@ -105,33 +88,28 @@ export default function LoginPage() {
               </button>
             </div>
           </div>
-
-          <div className="flex items-center justify-between">
-            <label className="flex items-center text-sm text-gray-600">
-              <input
-                type="checkbox"
-                checked={remember}
-                onChange={e => setRemember(e.target.checked)}
-                className="mr-2"
-              />
-              记住我
-            </label>
-            <Link href="/auth/forgot" className="text-sm text-gray-500 hover:text-black">忘记密码？</Link>
+          <div>
+            <label className="block text-sm font-medium text-gray-700">确认密码</label>
+            <input
+              type={showPassword ? 'text' : 'password'}
+              value={confirmPassword}
+              onChange={e => setConfirmPassword(e.target.value)}
+              placeholder="请再次输入密码"
+              className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-black/10"
+            />
           </div>
 
           <button
             type="submit"
             disabled={loading}
-            className="w-full rounded-md bg-black text-white py-2 text-sm hover:bg-black/90"
+            className="w-full rounded-md bg-black text-white py-2 text-sm hover:bg-black/90 disabled:opacity-60"
           >
-            {
-              loading? '......' : '登录'
-            }
+            {loading ? '提交中...' : '注册'}
           </button>
         </form>
 
         <p className="mt-6 text-center text-sm text-gray-600">
-          没有账号？ <Link href="/auth/register" className="text-gray-800 hover:text-black">注册</Link>
+          已有账号？ <Link href="/auth/login" className="text-gray-800 hover:text-black">登录</Link>
         </p>
       </div>
     </div>

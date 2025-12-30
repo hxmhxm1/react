@@ -1,6 +1,7 @@
 import { NextAuthOptions } from 'next-auth'
 import CredentialsProvider from 'next-auth/providers/credentials'
 import { prisma } from './prisma-client'
+import bcrypt from 'bcrypt'
 
 export const authOptions: NextAuthOptions = {
   session: { strategy: 'jwt' },
@@ -12,10 +13,13 @@ export const authOptions: NextAuthOptions = {
         password: { label: '密码', type: 'password' },
       },
       authorize: async (credentials) => {
-        if (!credentials?.username || !credentials?.password) return null
-        const user = await prisma.user.findFirst({ where: { username: credentials.username } })
+        const username = credentials?.username?.trim()
+        const password = credentials?.password
+        if (!username || !password) return null
+        const user = await prisma.user.findFirst({ where: { username } })
         if (!user) return null
-        if (user.password !== credentials.password) return null
+        const ok = await bcrypt.compare(password, user.password)
+        if (!ok) return null
         return { id: user.id, name: user.username }
       },
     }),

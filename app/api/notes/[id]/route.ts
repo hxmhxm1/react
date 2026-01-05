@@ -6,9 +6,12 @@ import { authOptions } from '@/lib/next-auth'
 // 删除博客
 export async function DELETE(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    // 解析动态路由参数
+    const { id } = await params
+
     // 获取当前用户的 session
     const session = await getServerSession(authOptions)
 
@@ -34,7 +37,7 @@ export async function DELETE(
 
     // 查找要删除的笔记
     const note = await prisma.note.findUnique({
-      where: { id: params.id }
+      where: { id: id }
     })
 
     if (!note) {
@@ -54,7 +57,7 @@ export async function DELETE(
 
     // 删除笔记
     await prisma.note.delete({
-      where: { id: params.id }
+      where: { id: id }
     })
 
     return NextResponse.json(

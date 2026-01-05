@@ -44,9 +44,9 @@ function Task({task} : { task: TTask }) {
         <div className='mx-[1rem] leading-8 my-[0.2rem]'>
           {task.text}
         </div>
-        <Button onClick={() => setIsEditing(true)} className="mr-[1rem]" >
+        <button onClick={() => setIsEditing(true)} className="mr-[1rem]" >
           Edit
-        </Button>
+        </button>
       </>
     );
   }
@@ -66,7 +66,7 @@ function Task({task} : { task: TTask }) {
         }}
       />
       {taskContent}
-      <Button onClick={() => {
+      <button onClick={() => {
         dispatch?.({
           type: 'deleted',
           id: task.id
@@ -74,7 +74,7 @@ function Task({task} : { task: TTask }) {
        }}
       >
         Delete
-      </Button>
+      </button>
     </label>
   );
 }

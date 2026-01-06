@@ -44,6 +44,7 @@
     "react-dom": "19.2.0",
     "sass": "^1.83.0",
     "sass-embedded": "^1.83.0",
+    "framer-motion": "^11.3.19",
     "yarn": "^1.22.22"
   },
   "devDependencies": {

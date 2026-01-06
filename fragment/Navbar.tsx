@@ -23,6 +23,7 @@ export default function Navbar({ isLoggedIn }: { isLoggedIn: boolean }) {
           <Link href="/" className="hover:text-black transition-colors">首页</Link>
           <Link href="/blog" className="hover:text-black transition-colors">博客</Link>
           <Link href="/admin/blog" className="hover:text-black transition-colors">我的博客</Link>
+          <Link href="/demo" className="hover:text-black transition-colors">demo</Link>
         </div>
 
         {/* 右侧：登录状态判断 */}

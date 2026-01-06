@@ -15,7 +15,7 @@ export default async function RootLayout({
       <body>
         <Providers session={session}>
           <Navbar isLoggedIn={!!session}></Navbar>
-          <main className="pt-16">
+          <main className="pt-16 h-screen">
             {children}
           </main>
         </Providers>

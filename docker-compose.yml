@@ -3,9 +3,12 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+      args:
+        - DATABASE_URL=${DATABASE_URL}
     container_name: react-demo-app
     ports:
       - "3000:3000"
+      - "5555:5555"
     env_file:
       - ./.env
     depends_on:

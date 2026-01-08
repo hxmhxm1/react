@@ -1,6 +1,6 @@
 'use client';
 import React, { useState } from 'react';
-import { getAllNotes } from '@/lib/prisma';
+// import { getAllNotes } from '@/lib/prisma';
 
 export function GetAllNotesDemo() {
   const [notes, setNotes] = useState<Record<string, unknown>>({});
@@ -11,8 +11,8 @@ export function GetAllNotesDemo() {
     try {
       setLoading(true);
       setError(null);
-      const result = await getAllNotes();
-      setNotes(result as Record<string, unknown>);
+      // const result = await getAllNotes();
+      // setNotes(result as Record<string, unknown>);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred');
     } finally {

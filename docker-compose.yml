@@ -6,11 +6,8 @@ services:
     container_name: react-demo-app
     ports:
       - "3000:3000"
-    environment:
-      - NODE_ENV=production
-      - DATABASE_URL=${DATABASE_URL}
-      - AUTH_SECRET=${AUTH_SECRET}
-      - NEXTAUTH_URL=${NEXTAUTH_URL}
+    env_file:
+      - ./.env
     depends_on:
       db:
         condition: service_healthy

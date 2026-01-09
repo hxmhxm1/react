@@ -1,0 +1,26 @@
+{
+  "name": "react-demo-shadcn-mcp",
+  "version": "1.0.0",
+  "description": "Shadcn/UI MCP configuration for React Demo",
+  "components": {
+    "ui": {
+      "path": "@/components/ui",
+      "style": "new-york",
+      "baseColor": "neutral",
+      "cssVariables": true
+    }
+  },
+  "aliases": {
+    "components": "@/components",
+    "utils": "@/lib/utils",
+    "ui": "@/components/ui",
+    "lib": "@/lib",
+    "hooks": "@/hooks"
+  },
+  "rules": {
+    "componentImport": "使用 @/components/ui 路径导入 shadcn/ui 组件",
+    "styleConsistency": "保持 new-york 样式风格一致性",
+    "typescript": "所有组件必须使用 TypeScript",
+    "namingConvention": "遵循现有组件命名约定"
+  }
+}

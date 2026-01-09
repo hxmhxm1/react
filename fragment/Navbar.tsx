@@ -2,13 +2,45 @@
 
 // components/Navbar.tsx
 import Link from 'next/link';
-
-import { signOut } from 'next-auth/react'
+import Image from 'next/image'
+import { signOut, useSession } from 'next-auth/react'
+import { useEffect, useRef, useState } from 'react'
 
 export default function Navbar({ isLoggedIn }: { isLoggedIn: boolean }) {
+  const { data: session } = useSession()
+  const [avatarUrl, setAvatarUrl] = useState<string | null>(null)
+  const fileRef = useRef<HTMLInputElement | null>(null)
 
   function handleLogout() {
     signOut({ callbackUrl: '/auth/login' })
+  }
+  async function fetchAvatar() {
+    if (!isLoggedIn) return
+    const res = await fetch('/api/user/avatar', { cache: 'no-store' })
+    if (res.ok) {
+      const data = await res.json()
+      setAvatarUrl(data.url || null)
+    }
+  }
+  useEffect(() => {
+    fetchAvatar()
+  }, [isLoggedIn, session?.user?.name])
+  async function handleUpload(file: File) {
+    const fd = new FormData()
+    fd.append('file', file)
+    const res = await fetch('/api/user/avatar', { method: 'POST', body: fd })
+    if (res.ok) {
+      const data = await res.json()
+      setAvatarUrl(data.url)
+    }
+  }
+  function onClickAvatar() {
+    fileRef.current?.click()
+  }
+  function onChangeFile(e: React.ChangeEvent<HTMLInputElement>) {
+    const f = e.target.files?.[0]
+    if (f) handleUpload(f)
+    e.target.value = ''
   }
   return (
     <nav className="fixed top-0 w-full z-50 border-b border-gray-200 bg-red backdrop-blur-md shadow-sm">
@@ -38,8 +70,14 @@ export default function Navbar({ isLoggedIn }: { isLoggedIn: boolean }) {
               <button onClick={handleLogout} className="text-sm font-medium text-gray-600 hover:text-black">
                 退出登录
               </button>
-              <div className="w-8 h-8 rounded-full bg-gray-200 border border-gray-300">
-              </div>
+              <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={onChangeFile} />
+              {avatarUrl ? (
+                <button onClick={onClickAvatar} className="w-8 h-8 rounded-full overflow-hidden border border-gray-300">
+                  <Image src={avatarUrl} alt="avatar" width={32} height={32} className="object-cover w-8 h-8" />
+                </button>
+              ) : (
+                <button onClick={onClickAvatar} className="w-8 h-8 rounded-full bg-gray-200 border border-gray-300" />
+              )}
             </>
           ) : (
             <Link href="/auth/login" className="text-sm font-medium hover:underline">

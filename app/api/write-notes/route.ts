@@ -37,8 +37,9 @@ export async function POST(request: Request) {
     }
 
     // 获取当前用户信息
+    const username = session.user!.name as string
     const user = await prisma.user.findFirst({
-      where: { username: session.user.name }
+      where: { username }
     })
 
     if (!user) {

@@ -24,8 +24,9 @@ export async function DELETE(
     }
 
     // 根据用户名查找用户
+    const username = session.user!.name as string
     const user = await prisma.user.findFirst({
-      where: { username: session.user.name }
+      where: { username }
     })
 
     if (!user) {

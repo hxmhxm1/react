@@ -14,6 +14,7 @@ model User {
   password String
   notes    Note[]
   messages Message[]
+  conversations Conversation[]
 }
 
 model Note {
@@ -26,10 +27,23 @@ model Note {
   authorId  String
 }
 
-model Message {
+model Conversation {
   id        String   @id @default(cuid())
-  content   String   @db.VarChar(1000)
+  title     String   @db.VarChar(255)
   createdAt DateTime @default(now())
-  author    User     @relation(fields: [authorId], references: [id])
-  authorId  String
+  updatedAt DateTime @updatedAt
+  owner     User     @relation(fields: [ownerId], references: [id])
+  ownerId   String
+  messages  Message[]
+}
+
+model Message {
+  id             String       @id @default(cuid())
+  content        String       @db.VarChar(4000)
+  role           String       @db.VarChar(32)
+  createdAt      DateTime     @default(now())
+  author         User?        @relation(fields: [authorId], references: [id])
+  authorId       String?
+  conversation   Conversation @relation(fields: [conversationId], references: [id])
+  conversationId String
 }

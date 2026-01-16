@@ -11,6 +11,9 @@ import IconDog2 from './dog2.png'
 import IconDog3 from './dog3.png'
 import IconDog4 from './dog4.png'
 import IconDog5 from './dog5.png'
+import IconPig1 from './pig1.png'
+import IconDuck1 from './duck1.png'
+import IconCut from './cut.png'
 
 import { StaticImageData } from 'next/image'
 
@@ -27,6 +30,9 @@ export type Icons = {
   IconDog3: StaticImageData,
   IconDog4: StaticImageData,
   IconDog5: StaticImageData,
+  IconPig1: StaticImageData,
+  IconDuck1: StaticImageData,
+  IconCut: StaticImageData
 }
 
 const icons: Icons = {
@@ -41,7 +47,10 @@ const icons: Icons = {
   IconDog2,
   IconDog3,
   IconDog4,
-  IconDog5
+  IconDog5,
+  IconPig1,
+  IconDuck1,
+  IconCut
 }
 
 export default icons

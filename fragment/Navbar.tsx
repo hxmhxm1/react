@@ -47,6 +47,7 @@ export default function Navbar({ isLoggedIn }: { isLoggedIn: boolean }) {
     if (f) handleUpload(f)
     e.target.value = ''
   }
+  if (pathname?.startsWith('/auth')) return null
   return (
     <nav className="fixed top-0 w-full z-50 border-b border-gray-200 bg-red backdrop-blur-md shadow-sm">
       <div className="container mx-auto pr-4 h-16 flex items-center justify-between">

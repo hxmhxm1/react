@@ -13,11 +13,11 @@ $color-danger: #ff2e00;
 // html[data-theme="yellow"]{
 //   $color-theme: yellow;
 // }
-$color-theme: pink;
+$color-theme: #c5b3e6;
 @mixin theme {
   @content;
   html{
-    $color-theme: pink;
+    $color-theme: #c5b3e6;
   }
   html[data-theme="red"]{
     $color-theme: red;

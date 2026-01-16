@@ -5,11 +5,16 @@ import Link from 'next/link';
 import Image from 'next/image'
 import { signOut, useSession } from 'next-auth/react'
 import { useEffect, useRef, useState } from 'react'
+import { Button } from '@/components/ui/button';
+import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from '@/components/ui/dropdown-menu'
+import SJIcon from '@/components/SJIcon'
+import { usePathname } from 'next/navigation'
 
 export default function Navbar({ isLoggedIn }: { isLoggedIn: boolean }) {
   const { data: session } = useSession()
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null)
   const fileRef = useRef<HTMLInputElement | null>(null)
+  const pathname = usePathname()
 
   function handleLogout() {
     signOut({ callbackUrl: '/auth/login' })
@@ -44,11 +49,13 @@ export default function Navbar({ isLoggedIn }: { isLoggedIn: boolean }) {
   }
   return (
     <nav className="fixed top-0 w-full z-50 border-b border-gray-200 bg-red backdrop-blur-md shadow-sm">
-      <div className="container mx-auto px-4 h-16 flex items-center justify-between">
-        {/* 左侧：Logo */}
-        <div className="font-bold text-xl tracking-tighter">
-          MyPortfolio
-        </div>
+      <div className="container mx-auto pr-4 h-16 flex items-center justify-between">
+        <Link href="/" className="flex items-center gap-2">
+          <SJIcon name="IconCat1" className="w-8 h-8" />
+          <SJIcon name="IconCat2" className="w-8 h-8" />
+          <SJIcon name="IconCat3" className="w-8 h-8" />
+          <SJIcon name="IconCat4" className="w-8 h-8" />
+        </Link>
 
         {/* 中间：Tab 导航 */}
         <div className="flex gap-8 text-sm font-medium text-gray-600">
@@ -63,21 +70,34 @@ export default function Navbar({ isLoggedIn }: { isLoggedIn: boolean }) {
         <div className="flex items-center gap-4">
           {isLoggedIn ? (
             <>
-              <Link href="/admin/write">
-                <button className="bg-black text-white px-4 py-2 rounded-full text-sm hover:bg-gray-800">
-                  写文章
-                </button>
-              </Link>
-              <button onClick={handleLogout} className="text-sm font-medium text-gray-600 hover:text-black">
-                退出登录
-              </button>
+              {pathname === '/admin/blog' && (
+                <Link href="/admin/write">
+                  <Button>
+                    写文章
+                  </Button>
+                </Link>
+              )}
               <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={onChangeFile} />
               {avatarUrl ? (
-                <button onClick={onClickAvatar} className="w-8 h-8 rounded-full overflow-hidden border border-gray-300">
-                  <Image src={avatarUrl} alt="avatar" width={32} height={32} className="object-cover w-8 h-8" />
-                </button>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <div onClick={onClickAvatar} className="w-8 h-8 rounded-full overflow-hidden border border-gray-300 cursor-pointer">
+                      <Image src={avatarUrl} alt="avatar" width={32} height={32} className="object-cover w-8 h-8" />
+                    </div>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent side="bottom" align="center" className="w-40">
+                    <DropdownMenuItem onSelect={handleLogout}>退出登录</DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
               ) : (
-                <button onClick={onClickAvatar} className="w-8 h-8 rounded-full bg-gray-200 border border-gray-300" />
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button onClick={onClickAvatar} size="icon" className="w-8 h-8 rounded-full bg-gray-200 border border-gray-300" />
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent side="bottom" align="end" className="w-40">
+                    <DropdownMenuItem className='text-center' onSelect={handleLogout}>退出登录</DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
               )}
             </>
           ) : (

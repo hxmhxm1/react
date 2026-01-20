@@ -62,13 +62,7 @@ export default function Page() {
         {activeTab === 'useTransition' && <UseTransitionDemo />}
         {activeTab === 'getAllNotes' && <GetAllNotesDemo />}
       </div> */}
-  <GetAllNotesDemo />
-      {/* 页脚 */}
-      <div style={{ background: '#f5f5f5', padding: '20px', textAlign: 'center', color: '#666', fontSize: 12 }}>
-        <p>
-          💡 提示：这些示例旨在教学并演示思路；在真实生产中，请按官方 API 使用并处理边界情况。
-        </p>
-      </div>
+      <GetAllNotesDemo />
     </div>
   );
 }

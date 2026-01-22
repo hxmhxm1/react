@@ -22,6 +22,7 @@
     "crypto-js": "^4.2.0",
     "framer-motion": "^11.3.19",
     "js-cookie": "^3.0.5",
+    "lil-gui": "^0.21.0",
     "lucide-react": "^0.562.0",
     "marked": "^17.0.1",
     "next": "16.0.10",
@@ -51,8 +52,8 @@
     "sass-embedded": "^1.83.0",
     "tailwind-merge": "^3.4.0",
     "tailwindcss-animate": "^1.0.7",
-    "yarn": "^1.22.22",
-    "three": "^0.164.0"
+    "three": "^0.164.0",
+    "yarn": "^1.22.22"
   },
   "devDependencies": {
     "@types/bcrypt": "^6.0.0",
@@ -60,13 +61,13 @@
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "@types/three": "^0.164.0",
     "autoprefixer": "^10.4.23",
     "eslint": "^8",
     "eslint-config-next": "15.0.3",
     "postcss": "^8",
     "prisma": "6.19.1",
     "tailwindcss": "^3.4.1",
-    "typescript": "^5",
-    "@types/three": "^0.164.0"
+    "typescript": "^5"
   }
 }

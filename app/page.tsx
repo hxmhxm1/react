@@ -4,6 +4,7 @@ import { useEffect } from 'react'
 import * as THREE from 'three'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
+import GUI from 'lil-gui'
 
 const Page = () => {
   const init = () => {
@@ -14,14 +15,20 @@ const Page = () => {
     // 2. 创建场景 (Scene)
     const scene = new THREE.Scene()
 
+    // 2.1 初始化 GUI
+    const gui = new GUI()
+    const debugObject = {
+      wireframe: true
+    }
+
     // 3. 模型加载器 (GLTFLoader)
     const gltfLoader = new GLTFLoader()
     let donut: THREE.Object3D | null = null
 
     // 4. 辅助线 (AxesHelper)
     // 辅助线可以帮助理解 3D 空间中的坐标轴方向
-    const axesHelper = new THREE.AxesHelper( 5 );
-    scene.add( axesHelper );
+    // const axesHelper = new THREE.AxesHelper( 5 );
+    // scene.add( axesHelper );
 
     // 加载甜甜圈模型
     // 注意：这里使用 /api/static 代理路径来绕过 Next.js 对 .gltf 文件的模块导入限制
@@ -30,6 +37,31 @@ const Page = () => {
       'scene.gltf',
       (gltf) => {
         donut = gltf.scene as THREE.Object3D
+        
+        // 更新模型线框模式的函数
+        const updateWireframe = () => {
+          if (!donut) return
+          donut.traverse((child) => {
+            if ((child as THREE.Mesh).isMesh) {
+              const mesh = child as THREE.Mesh
+              const materials = Array.isArray(mesh.material) ? mesh.material : [mesh.material]
+              materials.forEach((m: THREE.Material) => {
+                if ('wireframe' in m) {
+                  ;(m as THREE.MeshStandardMaterial).wireframe = debugObject.wireframe
+                }
+              })
+            }
+          })
+        }
+
+        // 初始化线框状态
+        updateWireframe()
+
+        // 添加 GUI 控制
+        gui.add(debugObject, 'wireframe')
+          .name('显示线性')
+          .onChange(updateWireframe)
+
         const radius = 8.5
         // 设置初始位置在屏幕右侧
         donut.position.x = 1.5
@@ -117,9 +149,19 @@ const Page = () => {
       })
     }
     tick()
+
+    // 返回清理函数，销毁 GUI
+    return () => {
+      gui.destroy()
+    }
   }
 
-  useEffect(() => { init() }, [])
+  useEffect(() => {
+    const cleanup = init()
+    return () => {
+      if (cleanup) cleanup()
+    }
+  }, [])
 
   return (
     <div className="h-full w-full flex bg-[#ffc0cb]">

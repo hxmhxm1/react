@@ -32,6 +32,29 @@ export default function WritePage() {
     setPreview(html)
   }
 
+  // 处理按键事件，支持 Tab 缩进
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === 'Tab') {
+      e.preventDefault()
+      const target = e.currentTarget
+      const start = target.selectionStart
+      const end = target.selectionEnd
+      const value = target.value
+
+      // 插入两个空格
+      const newValue = value.substring(0, start) + '  ' + value.substring(end)
+      
+      setContent(newValue)
+      setPreview(marked(newValue) as string)
+      
+      // 恢复光标位置（需要在 React 渲染后执行，但直接设置也可以生效，因为是受控组件）
+      // 使用 setTimeout 确保在 React 重新渲染后设置光标位置
+      setTimeout(() => {
+        target.selectionStart = target.selectionEnd = start + 2
+      }, 0)
+    }
+  }
+
   // 处理发布
   const handlePublish = async () => {
     // 验证
@@ -155,13 +178,14 @@ export default function WritePage() {
       </div>
 
       {/* 编辑区域 - 左右分栏 */}
-      <div className="flex-1 flex gap-4 border-t border-gray-200 pt-4 pb-4 overflow-hidden">
+      <div className="flex-1 flex gap-4 border-t border-gray-200 pt-4 pb-4 px-1 overflow-hidden">
         {/* 左侧：输入框 */}
         <div className="w-1/2 flex flex-col">
           <div className="text-xs text-gray-500 mb-2 font-semibold">Markdown 编辑</div>
           <textarea 
             value={content}
             onChange={handleContentChange}
+            onKeyDown={handleKeyDown}
             className="flex-1 p-4 border border-gray-200 rounded-lg resize-none font-mono text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none focus:border-transparent"
             placeholder="在此输入 Markdown 内容...&#10;&#10;# 标题&#10;## 小标题&#10;&#10;**加粗文本** 和 *斜体*&#10;&#10;`行内代码` 和 ```代码块```&#10;&#10;[链接](https://example.com)&#10;&#10;* 列表项 1&#10;* 列表项 2"
           />

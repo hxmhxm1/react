@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { BASE_URL } from '@/const'
+import { marked } from 'marked'
 
 export async function generateMetadata({ params }: { params: { slug: string } }) {
   const urlParams = await params
@@ -29,9 +30,10 @@ export default async function Page({ params }: { params: { slug: string } }) {
       <div className="mt-2 text-sm text-gray-500">
         {new Date(note.updatedAt).toLocaleString('zh-CN', { hour12: false })}
       </div>
-      <article className="mt-6 leading-7 text-gray-800 whitespace-pre-wrap">
-        {note.content}
-      </article>
+      <article 
+        className="mt-6 leading-7 text-gray-800 prose max-w-none"
+        dangerouslySetInnerHTML={{ __html: marked(note.content || '') as string }}
+      />
     </div>
   )
 }

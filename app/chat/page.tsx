@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react"
 import { useSession } from "next-auth/react"
 import { Button } from "@/components/ui/button"
+import { Trash2 } from "lucide-react"
 
 const ChatPage = () => {
   const { data: session } = useSession()
@@ -33,7 +34,7 @@ const ChatPage = () => {
   useEffect(() => {
     if (!listRef.current) return
     listRef.current.scrollTop = listRef.current.scrollHeight
-  }, [messages.length])
+  }, [messages])
 
   const startConversation = async () => {
     const res = await fetch('/api/chat/conversations', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ title: '新对话' }) })
@@ -45,9 +46,28 @@ const ChatPage = () => {
     }
   }
 
+  const deleteConversation = async (e: React.MouseEvent, id: string) => {
+    e.stopPropagation()
+    if (!confirm('确定要删除该对话吗？')) return
+
+    try {
+      const res = await fetch(`/api/chat/conversations/${id}`, { method: 'DELETE' })
+      if (res.ok) {
+        if (currentId === id) {
+          setCurrentId(null)
+          setMessages([])
+        }
+        await loadConversations()
+      }
+    } catch (error) {
+      console.error('删除对话失败', error)
+    }
+  }
+
   const send = async () => {
     if (!input.trim() || sending || !currentId) return
     setSending(true)
+    setInput("")
     const uid = (typeof crypto !== 'undefined' && 'randomUUID' in crypto) ? crypto.randomUUID() : `u_${Date.now()}`
     const aid = (typeof crypto !== 'undefined' && 'randomUUID' in crypto) ? crypto.randomUUID() : `a_${Date.now()}`
     const userMsg = { id: uid, role: 'user' as const, content: input.trim(), createdAt: new Date().toISOString() }
@@ -81,7 +101,6 @@ const ChatPage = () => {
         await fetch(`/api/chat/conversations/${currentId}/record`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ userContent: userMsg.content, assistantContent }) })
         await loadConversations()
       }
-      setInput("")
     } finally {
       setSending(false)
     }
@@ -93,19 +112,29 @@ const ChatPage = () => {
         <Button onClick={startConversation} className="w-full">开启新对话</Button>
         <div className="flex-1 overflow-y-auto space-y-1">
           {conversations.map(c => (
-            <button key={c.id} onClick={() => setCurrentId(c.id)} className={`w-full text-left px-3 py-2 rounded-md ${currentId===c.id? 'bg-secondary' : 'hover:bg-accent'}`}>
-              {c.title}
-            </button>
+            <div 
+              key={c.id} 
+              onClick={() => setCurrentId(c.id)} 
+              className={`group w-full flex items-center justify-between px-3 py-2 rounded-md cursor-pointer transition-colors ${currentId===c.id? 'bg-secondary' : 'hover:bg-accent'}`}
+            >
+              <span className="truncate text-sm">{c.title}</span>
+              <button 
+                onClick={(e) => deleteConversation(e, c.id)}
+                className="opacity-0 group-hover:opacity-100 p-1 hover:bg-red-100 hover:text-red-600 rounded transition-all"
+                title="删除对话"
+              >
+                <Trash2 size={14} />
+              </button>
+            </div>
           ))}
           {conversations.length===0 && (
-            <div className="text-sm text-muted-foreground">暂无对话</div>
+            <div className="text-sm text-muted-foreground text-center py-4">暂无对话</div>
           )}
         </div>
       </aside>
       <main className="flex-1 flex flex-col">
         <div className="h-16 border-b border-input flex items-center px-6 justify-between">
           <div className="font-semibold">{conversations.find(c=>c.id===currentId)?.title || '对话'}</div>
-          <div className="text-sm text-muted-foreground">{session?.user?.name ? `已登录：${session.user.name}` : '未登录'}</div>
         </div>
         <div ref={listRef} className="flex-1 overflow-y-auto p-6 space-y-3">
           {messages.length===0 && (
@@ -118,8 +147,20 @@ const ChatPage = () => {
           ))}
         </div>
         <div className="h-20 border-t border-input px-6 flex items-center gap-3">
-          <input className="flex-1 h-10 rounded-md border border-input bg-background px-3 text-sm focus:outline-none" value={input} onChange={e=>setInput(e.target.value)} placeholder={session?.user ? '输入消息' : '登录后才能发送消息'} disabled={!session?.user || !currentId} />
-          <Button onClick={send} disabled={!session?.user || sending || !currentId}>{sending ? '发送中' : '发送'}</Button>
+          <input 
+            className="flex-1 h-10 rounded-md border border-input bg-background px-3 text-sm focus:outline-none" 
+            value={input} 
+            onChange={e=>setInput(e.target.value)} 
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault()
+                send()
+              }
+            }}
+            placeholder={session?.user ? '输入消息' : '登录后才能发送消息'} 
+            disabled={!session?.user || !currentId} 
+          />
+          <Button onClick={send} disabled={!session?.user || sending || !currentId}>{sending ? '回复中' : '发送'}</Button>
         </div>
       </main>
     </div>

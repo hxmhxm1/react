@@ -5,6 +5,9 @@ import * as THREE from 'three'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import GUI from 'lil-gui'
+import { motion } from 'framer-motion'
+import { ArrowRight, Star } from 'lucide-react'
+import { Button } from "@/components/ui/button"
 
 const Page = () => {
   const init = () => {
@@ -17,6 +20,7 @@ const Page = () => {
 
     // 2.1 初始化 GUI
     const gui = new GUI()
+    gui.close() // 默认关闭
     const debugObject = {
       wireframe: true
     }
@@ -24,11 +28,6 @@ const Page = () => {
     // 3. 模型加载器 (GLTFLoader)
     const gltfLoader = new GLTFLoader()
     let donut: THREE.Object3D | null = null
-
-    // 4. 辅助线 (AxesHelper)
-    // 辅助线可以帮助理解 3D 空间中的坐标轴方向
-    // const axesHelper = new THREE.AxesHelper( 5 );
-    // scene.add( axesHelper );
 
     // 加载甜甜圈模型
     // 注意：这里使用 /api/static 代理路径来绕过 Next.js 对 .gltf 文件的模块导入限制
@@ -63,8 +62,8 @@ const Page = () => {
           .onChange(updateWireframe)
 
         const radius = 8.5
-        // 设置初始位置在屏幕右侧
-        donut.position.x = 1.5
+        // 设置初始位置
+        donut.position.x = 0
         // 设置模型缩放倍数
         donut.scale.set(radius, radius, radius)
         scene.add(donut)
@@ -76,17 +75,24 @@ const Page = () => {
 
     // 4. 灯光设置 (Lights)
     // 环境光：提供基础亮度，确保暗部不会完全变黑
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.8)
+    const ambientLight = new THREE.AmbientLight(0xffffff, 1.2)
     scene.add(ambientLight)
 
     // 平行光：模拟太阳光，产生阴影和立体感
-    const directionalLight = new THREE.DirectionalLight(0xffffff, 1)
-    directionalLight.position.set(1, 2, 0)
+    const directionalLight = new THREE.DirectionalLight(0xffffff, 1.5)
+    directionalLight.position.set(2, 4, 1)
     directionalLight.castShadow = true // 开启阴影投影
     scene.add(directionalLight)
 
     // 5. 视口大小设置
-    const sizes = { width: window.innerWidth, height: window.innerHeight }
+    const getCanvasSize = () => {
+      const parent = canvas.parentElement
+      return {
+        width: parent?.clientWidth || window.innerWidth,
+        height: parent?.clientHeight || window.innerHeight
+      }
+    }
+    let sizes = getCanvasSize()
 
     // 6. 相机设置 (Camera)
     // 使用透视相机 (PerspectiveCamera)
@@ -114,9 +120,6 @@ const Page = () => {
     // 限制缩放范围
     controls.minDistance = 2
     controls.maxDistance = 10
-    // 限制旋转角度（可选）
-    // controls.minPolarAngle = Math.PI / 4
-    // controls.maxPolarAngle = Math.PI / 1.5
 
     // 8. 动画循环 (Animation Loop)
     const clock = new THREE.Clock()
@@ -142,17 +145,27 @@ const Page = () => {
       renderer.render(scene, camera)
       // 请求下一帧动画
       window.requestAnimationFrame(tick)
-      window.addEventListener('resize', () => {
-        renderer.setSize(window.innerWidth, window.innerHeight)
-        camera.aspect = window.innerWidth / window.innerHeight
-        camera.updateProjectionMatrix()
-      })
     }
+
+    const handleResize = () => {
+      sizes = getCanvasSize()
+      
+      // 更新相机
+      camera.aspect = sizes.width / sizes.height
+      camera.updateProjectionMatrix()
+
+      // 更新渲染器
+      renderer.setSize(sizes.width, sizes.height)
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
+    }
+
+    window.addEventListener('resize', handleResize)
     tick()
 
-    // 返回清理函数，销毁 GUI
+    // 返回清理函数，销毁 GUI 和事件监听
     return () => {
       gui.destroy()
+      window.removeEventListener('resize', handleResize)
     }
   }
 
@@ -164,9 +177,68 @@ const Page = () => {
   }, [])
 
   return (
-    <div className="h-full w-full flex bg-[#ffc0cb]">
-      <div className="w-1/2 min-w-[320px] relative">
+    <div className="min-h-screen w-full flex flex-col lg:flex-row bg-[#fdf2f8] overflow-x-hidden relative font-sans text-[#4a2c2c]">
+      {/* 背景装饰 */}
+      <div className="absolute top-[-10%] left-[-5%] w-[60%] lg:w-[40%] h-[40%] bg-[#fee2e2] rounded-full blur-[80px] lg:blur-[100px] opacity-50 pointer-events-none"></div>
+      <div className="absolute bottom-[-10%] right-[-5%] w-[60%] lg:w-[40%] h-[40%] bg-[#fae8ff] rounded-full blur-[80px] lg:blur-[100px] opacity-50 pointer-events-none"></div>
+
+      {/* 左侧文字内容 */}
+      <div className="w-full lg:w-1/2 min-h-[60vh] lg:h-screen flex flex-col justify-center px-6 md:px-12 lg:px-20 z-10 relative py-20 lg:py-0">
+        <motion.div
+          initial={{ opacity: 0, x: -50 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
+        >
+          <div className="flex items-center gap-2 mb-4 lg:mb-6">
+            <div className="h-[1px] w-8 lg:w-12 bg-[#ec4899]"></div>
+            <span className="text-[#ec4899] font-bold tracking-[0.2em] text-xs lg:text-sm uppercase">Sweet Experience</span>
+          </div>
+          
+          <h1 className="text-5xl md:text-7xl lg:text-8xl font-black mb-4 lg:mb-6 leading-[0.9] tracking-tighter">
+            THE<br />
+            <span className="text-[#ec4899]">DONUT</span><br />
+            STUDIO
+          </h1>
+          
+          <p className="text-lg lg:text-xl text-[#7c5d5d] mb-8 lg:mb-10 max-w-md leading-relaxed">
+            学习three.js，记录学习过程。
+          </p>
+
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6 lg:gap-8">
+            <Button size="lg" className="w-full sm:w-auto bg-[#ec4899] hover:bg-[#db2777] text-white rounded-full px-8 h-14 text-lg font-bold shadow-lg shadow-pink-200 transition-all hover:scale-105 active:scale-95 group">
+              内容记录
+              <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
+            </Button>
+            
+            <div className="flex items-center gap-4">
+              <div className="flex -space-x-3">
+                {[1, 2, 3].map((i) => (
+                  <div key={i} className="w-10 h-10 rounded-full border-2 border-white bg-[#fbcfe8] flex items-center justify-center overflow-hidden shadow-sm">
+                    <img src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${i + 10}`} alt="avatar" />
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </motion.div>
+      </div>
+
+      {/* 右侧 3D 区域 */}
+      <div className="w-full lg:w-1/2 h-[50vh] lg:h-screen relative cursor-grab active:cursor-grabbing bg-transparent">
         <canvas className="webgl w-full h-full block"></canvas>
+        
+        {/* 交互提示 */}
+        <motion.div 
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1.5, duration: 1 }}
+          className="absolute bottom-8 right-8 lg:bottom-12 lg:right-12 flex items-center gap-3 text-[#9d7d7d]"
+        >
+          <span className="text-[10px] lg:text-xs font-medium uppercase tracking-[0.2em]">Drag to Rotate</span>
+          <div className="w-8 h-8 lg:w-10 lg:h-10 rounded-full border border-[#e5e7eb] flex items-center justify-center animate-bounce">
+            <div className="w-1 h-2 bg-[#ec4899] rounded-full"></div>
+          </div>
+        </motion.div>
       </div>
     </div>
   )
